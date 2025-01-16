@@ -1,36 +1,59 @@
-// Class to represent a Book
+// Class representing a Book
 class Book {
   constructor(title, author, pages, isRead) {
-    this.title = title; // Title of the book
-    this.author = author; // Author of the book
-    this.pages = pages; // Number of pages in the book
-    this.isRead = isRead; // Read status of the book (true/false)
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isRead = isRead;
   }
 
-  // Method to toggle the read status of the book
+  // Method to toggle the read status
   toggleReadStatus() {
     this.isRead = !this.isRead;
   }
 }
 
-// Array to store all book objects
-const myLibrary = [];
+// Class representing the Library
+class Library {
+  #books; // Private field to store the books
 
-// Function to add a new book to the library array
-function addBookToLibrary(title, author, pages, isRead) {
-  const newBook = new Book(title, author, pages, isRead); // Create a new book instance
-  myLibrary.push(newBook); // Add the book to the library array
+  constructor() {
+    this.#books = [];
+  }
+
+  // Getter to retrieve all books
+  get books() {
+    return this.#books;
+  }
+
+  // Method to add a book to the library
+  addBook(book) {
+    this.#books.push(book);
+  }
+
+  // Method to remove a book from the library
+  removeBook(index) {
+    this.#books.splice(index, 1);
+  }
+
+  // Method to get a book by index
+  getBook(index) {
+    return this.#books[index];
+  }
 }
+
+// Instance of the Library class
+const myLibrary = new Library();
 
 // Function to display all books in the library on the page
 function displayBooks() {
-  const libraryContainer = document.getElementById('library'); // Get the library container
+  const libraryContainer = document.getElementById('library');
   libraryContainer.innerHTML = ''; // Clear the container to avoid duplicates
 
-  myLibrary.forEach((book, index) => {
+  myLibrary.books.forEach((book, index) => {
     // Create a card for each book
     const bookCard = document.createElement('div');
-    bookCard.classList.add('book-card'); // Add a class for styling
+    bookCard.classList.add('book-card');
 
     // Display book details
     bookCard.innerHTML = `
@@ -42,7 +65,7 @@ function displayBooks() {
       <button class="toggle-read-btn" data-index="${index}">Toggle Read</button>
     `;
 
-    libraryContainer.appendChild(bookCard); // Add the card to the container
+    libraryContainer.appendChild(bookCard);
   });
 
   // Add event listeners for remove and toggle buttons
@@ -57,33 +80,32 @@ function displayBooks() {
 
 // Function to remove a book from the library
 function removeBook(event) {
-  const bookIndex = event.target.dataset.index; // Get the index from the data attribute
-  myLibrary.splice(bookIndex, 1); // Remove the book from the array
-  displayBooks(); // Refresh the display
+  const bookIndex = event.target.dataset.index;
+  myLibrary.removeBook(bookIndex);
+  displayBooks();
 }
 
 // Function to toggle the read status of a book
 function toggleReadStatus(event) {
-  const bookIndex = event.target.dataset.index; // Get the index from the data attribute
-  myLibrary[bookIndex].toggleReadStatus(); // Toggle the read status
-  displayBooks(); // Refresh the display
+  const bookIndex = event.target.dataset.index;
+  const book = myLibrary.getBook(bookIndex);
+  book.toggleReadStatus();
+  displayBooks();
 }
 
 // Function to handle the form submission
 function handleFormSubmit(event) {
-  event.preventDefault(); // Prevent default form submission
+  event.preventDefault();
 
-  // Get input values
   const title = document.getElementById('title').value;
   const author = document.getElementById('author').value;
   const pages = document.getElementById('pages').value;
   const isRead = document.getElementById('isRead').checked;
 
-  // Add the new book to the library and refresh the display
-  addBookToLibrary(title, author, pages, isRead);
+  const newBook = new Book(title, author, pages, isRead);
+  myLibrary.addBook(newBook);
   displayBooks();
 
-  // Clear the form
   event.target.reset();
 }
 
@@ -92,6 +114,6 @@ const form = document.getElementById('book-form');
 form.addEventListener('submit', handleFormSubmit);
 
 // Initial books for testing
-addBookToLibrary('The Hobbit', 'J.R.R. Tolkien', 310, true);
-addBookToLibrary('1984', 'George Orwell', 328, false);
+myLibrary.addBook(new Book('The Hobbit', 'J.R.R. Tolkien', 310, true));
+myLibrary.addBook(new Book('1984', 'George Orwell', 328, false));
 displayBooks();
