@@ -1,22 +1,24 @@
+// Class to represent a Book
+class Book {
+  constructor(title, author, pages, isRead) {
+    this.title = title; // Title of the book
+    this.author = author; // Author of the book
+    this.pages = pages; // Number of pages in the book
+    this.isRead = isRead; // Read status of the book (true/false)
+  }
+
+  // Method to toggle the read status of the book
+  toggleReadStatus() {
+    this.isRead = !this.isRead;
+  }
+}
+
 // Array to store all book objects
 const myLibrary = [];
 
-// Constructor function to create a Book object
-function Book(title, author, pages, isRead) {
-  this.title = title; // Title of the book
-  this.author = author; // Author of the book
-  this.pages = pages; // Number of pages in the book
-  this.isRead = isRead; // Read status of the book (true/false)
-}
-
-// Method to toggle the read status of the book
-Book.prototype.toggleReadStatus = function() {
-  this.isRead = !this.isRead;
-};
-
 // Function to add a new book to the library array
 function addBookToLibrary(title, author, pages, isRead) {
-  const newBook = new Book(title, author, pages, isRead); // Create a new book object
+  const newBook = new Book(title, author, pages, isRead); // Create a new book instance
   myLibrary.push(newBook); // Add the book to the library array
 }
 
